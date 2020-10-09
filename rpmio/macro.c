@@ -910,6 +910,7 @@ grabArgs(MacroBuf mb, const rpmMacroEntry me, const char * se,
     ARGV_t argv = NULL;
     int argc = 0;
     int c;
+    int run;
 
     /* 
      * Prepare list of call arguments, starting with macro name as argv[0].
@@ -960,8 +961,10 @@ grabArgs(MacroBuf mb, const rpmMacroEntry me, const char * se,
     opts = me->opts;
     argc = argvCount(argv);
 
+    /* If option processing is disabled, the while below will be skipped */
+    run = strcmp(opts, "-");
     /* Define option macros. */
-    while ((c = getopt(argc, argv, opts)) != -1)
+    while (run && (c = getopt(argc, argv, opts)) != -1)
     {
 	char *name = NULL, *body = NULL;
 	if (c == '?' || strchr(opts, c) == NULL) {
